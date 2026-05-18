@@ -1,8 +1,10 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/subject_provider.dart';
 import '../models/subject_model.dart';
 import '../utils/theme.dart';
+import '../core/app_colors.dart';
+import '../core/app_text_styles.dart';
 
 class AddSubjectScreen extends StatefulWidget {
   const AddSubjectScreen({super.key});
@@ -27,7 +29,10 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
   void _saveSubject() {
     if (_nameController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Digite o nome da matéria!')),
+        const SnackBar(
+          content: Text('Digite o nome da matéria!', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
@@ -43,7 +48,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Matéria ${_nameController.text} adicionada!'),
-        backgroundColor: AppTheme.secondaryColor,
+        backgroundColor: AppColors.accent,
       ),
     );
   }
@@ -63,9 +68,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
           children: [
             Text(
               'Título da Matéria',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              style: AppTextStyles.cardTitle,
             ),
             const SizedBox(height: 8),
             TextField(
@@ -78,9 +81,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
             const SizedBox(height: 32),
             Text(
               'Cor da Matéria',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              style: AppTextStyles.cardTitle,
             ),
             const SizedBox(height: 16),
             Wrap(
@@ -102,14 +103,14 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                           color: Color(int.parse(color['code'].replaceFirst('#', '0xFF'))),
                           shape: BoxShape.circle,
                           border: isSelected
-                              ? Border.all(color: AppTheme.primaryColor, width: 3)
+                              ? Border.all(color: AppColors.primary, width: 3)
                               : null,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         color['name'],
-                        style: Theme.of(context).textTheme.labelSmall,
+                        style: AppTextStyles.progressLabel,
                       ),
                     ],
                   ),

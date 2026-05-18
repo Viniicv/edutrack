@@ -1,5 +1,8 @@
+import 'package:edutrack_app/widgets/logo_widget.dart';
 import 'package:flutter/material.dart';
-import '../utils/theme.dart';
+import '../core/app_colors.dart';
+import '../core/app_text_styles.dart';
+import '../widgets/logo_widget.dart';
 import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -22,20 +25,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _emailController.text.isEmpty ||
         _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Preencha todos os campos!')),
+        const SnackBar(
+          content: Text('Preencha todos os campos!', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
 
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('As senhas não coincidem!')),
+        const SnackBar(
+          content: Text('As senhas não coincidem!', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Cadastro realizado com sucesso!')),
+      const SnackBar(content: Text('Cadastro realizado com sucesso!', style: TextStyle(color: Colors.white)), 
+      backgroundColor: Colors.green)
     );
     
     Navigator.pushReplacement(
@@ -59,41 +69,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Column(
                     children: [
                       // Logo - Quadrado Azul
-                      Container(
-                        width: 70,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: AppTheme.primaryColor,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppTheme.primaryColor.withOpacity(0.3),
-                              blurRadius: 12,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.school_rounded,
-                            size: 35,
-                            color: Colors.white,
-                          ),
-                        ),
+                      const Center(
+                        child: LogoWidget(size: 80, showText: false),
                       ),
                       const SizedBox(height: 20),
                       Text(
                         'EDUTRACK',
-                        style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                          color: AppTheme.primaryColor,
-                          fontWeight: FontWeight.bold,
+                        style: AppTextStyles.heading.copyWith(
+                          color: AppColors.primary,
                           letterSpacing: 2,
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         'Junte-se a nós:',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: AppTextStyles.subtitle,
                       ),
                     ],
                   ),
@@ -162,7 +152,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   children: [
                     Text(
                       'Já tem uma conta? ',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: AppTextStyles.progressLabel,
                     ),
                     TextButton(
                       onPressed: () {
@@ -171,7 +161,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: const Text(
                         'Faça Login',
                         style: TextStyle(
-                          color: AppTheme.primaryColor,
+                          color: AppColors.primary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

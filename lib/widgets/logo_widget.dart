@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/theme.dart';
+import '../core/app_colors.dart';
 
 class LogoWidget extends StatelessWidget {
   final double size;
@@ -27,7 +27,7 @@ class LogoWidget extends StatelessWidget {
               width: size,
               height: size,
               decoration: BoxDecoration(
-                color: AppTheme.primaryColor,
+                color: AppColors.primary,
                 borderRadius: BorderRadius.circular(size * 0.2),
               ),
               child: Icon(
@@ -45,7 +45,7 @@ class LogoWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: size * 0.3,
               fontWeight: FontWeight.bold,
-              color: AppTheme.primaryColor,
+              color: AppColors.primary,
               letterSpacing: 2,
             ),
           ),

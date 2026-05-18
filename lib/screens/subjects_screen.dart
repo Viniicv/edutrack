@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../providers/subject_provider.dart';
 import '../models/subject_model.dart';
 import '../utils/theme.dart';
+import '../core/app_colors.dart';
+import '../core/app_text_styles.dart';
 import 'add_subject_screen.dart';
 
 class SubjectsScreen extends StatelessWidget {
@@ -38,12 +40,10 @@ class SubjectsScreen extends StatelessWidget {
               children: [
                 Text(
                   'Nova Matéria',
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppTextStyles.title,
                 ),
                 IconButton(
-                  icon: const Icon(Icons.add_circle, color: AppTheme.primaryColor),
+                  icon: const Icon(Icons.add_circle, color: AppColors.primary),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -66,11 +66,11 @@ class SubjectsScreen extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.book_outlined, size: 64, color: AppTheme.textSecondary),
+                        const Icon(Icons.book_outlined, size: 64, color: AppColors.textSecondary),
                         const SizedBox(height: 16),
                         Text(
                           'Nenhuma matéria cadastrada',
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          style: AppTextStyles.subtitle,
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton(
@@ -103,8 +103,8 @@ class SubjectsScreen extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
-        selectedItemColor: AppTheme.primaryColor,
-        unselectedItemColor: AppTheme.textSecondary,
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.textSecondary,
         currentIndex: 2, // Matérias é o índice 2
         onTap: (index) {
           if (index == 0) {
@@ -156,18 +156,13 @@ class SubjectsScreen extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     subject.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
+                    style: AppTextStyles.cardTitle,
                   ),
                 ],
               ),
               Text(
                 '${subject.progress}% Concluído',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppTheme.textSecondary,
-                ),
+                style: AppTextStyles.progressLabel,
               ),
             ],
           ),

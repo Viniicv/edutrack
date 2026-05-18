@@ -1,11 +1,12 @@
-﻿import 'package:flutter/material.dart';
+import 'package:edutrack_app/widgets/logo_widget.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/activity_provider.dart';
 import '../providers/subject_provider.dart';
-import '../models/activity_model.dart';
-import '../models/subject_model.dart';
 import '../utils/theme.dart';
+import '../core/app_colors.dart';
+import '../core/app_text_styles.dart';
 import 'calendar_screen.dart';
 import 'activities_list_screen.dart';
 
@@ -46,8 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
-        selectedItemColor: AppTheme.primaryColor,
-        unselectedItemColor: AppTheme.textSecondary,
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.textSecondary,
         currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {
@@ -85,7 +86,7 @@ class HomeContent extends StatelessWidget {
       slivers: [
      SliverAppBar(
   floating: true,
-  pinned: true,
+  pinned: false,
   title: Row(
     children: [
       // Logo quadrada pequena na AppBar
@@ -93,14 +94,10 @@ class HomeContent extends StatelessWidget {
         width: 32,
         height: 32,
         decoration: BoxDecoration(
-          color: AppTheme.primaryColor,
+          color: AppColors.primary,
           borderRadius: BorderRadius.circular(8),
-        ),
-        child: const Icon(
-          Icons.school_rounded,
-          size: 18,
-          color: Colors.white,
-        ),
+        ),// Logo - Quadrado Azul
+        child: const Center(child: LogoWidget(size: 24, showText: false)),
       ),
       const SizedBox(width: 10),
       const Text(
@@ -153,14 +150,14 @@ class HomeContent extends StatelessWidget {
               final name = snapshot.data ?? 'Estudante';
               return Text(
                 'Olá, $name!',
-                style: Theme.of(context).textTheme.displayLarge,
+                style: AppTextStyles.heading,
               );
             },
           ),
           const SizedBox(height: 4),
           Text(
             'Aqui estão suas prioridades:',
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: AppTextStyles.subtitle,
           ),
         ],
       ),
@@ -213,7 +210,7 @@ class HomeContent extends StatelessWidget {
                     child: Center(
                       child: Text(
                         'Nenhuma tarefa urgente! 🎉',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: AppTextStyles.subtitle,
                       ),
                     ),
                   ),
@@ -257,7 +254,7 @@ class HomeContent extends StatelessWidget {
             children: [
               Text(
                 'Suas Matérias',
-                style: Theme.of(context).textTheme.displaySmall,
+                style: AppTextStyles.title,
               ),
               const SizedBox(height: 16),
               ...subjects.map((subject) => Padding(
@@ -285,14 +282,14 @@ class HomeContent extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: isUrgent
-                        ? AppTheme.urgentColor.withOpacity(0.1)
-                        : AppTheme.primaryColor.withOpacity(0.1),
+                        ? const Color(0xFFEF4444).withOpacity(0.1)
+                        : AppColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     isUrgent ? Icons.warning_amber_rounded : Icons.assignment,
                     size: 20,
-                    color: isUrgent ? AppTheme.urgentColor : AppTheme.primaryColor,
+                    color: isUrgent ? const Color(0xFFEF4444) : AppColors.primary,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -302,15 +299,12 @@ class HomeContent extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                        ),
+                        style: AppTextStyles.cardTitle,
                       ),
                       const SizedBox(height: 4),
                       Text(
                         subject,
-                        style: Theme.of(context).textTheme.labelLarge,
+                        style: AppTextStyles.progressLabel,
                       ),
                     ],
                   ),
@@ -320,11 +314,11 @@ class HomeContent extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.calendar_today, size: 14, color: AppTheme.textSecondary),
+                const Icon(Icons.calendar_today, size: 14, color: AppColors.textSecondary),
                 const SizedBox(width: 4),
                 Text(
                   'Entregue até ${_formatDate(dueDate)}',
-                  style: Theme.of(context).textTheme.labelSmall,
+                  style: AppTextStyles.progressLabel,
                 ),
               ],
             ),
@@ -354,16 +348,13 @@ class HomeContent extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   subject.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
+                  style: AppTextStyles.cardTitle.copyWith(fontSize: 14),
                 ),
               ],
             ),
             Text(
               '${subject.progress}% Concluído',
-              style: Theme.of(context).textTheme.labelSmall,
+              style: AppTextStyles.progressLabel,
             ),
           ],
         ),

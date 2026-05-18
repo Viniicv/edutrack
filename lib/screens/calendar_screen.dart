@@ -1,8 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/activity_provider.dart';
 import '../models/activity_model.dart';
-import '../utils/theme.dart';
+import '../core/app_colors.dart';
+import '../core/app_text_styles.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -33,9 +34,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               children: [
                 Text(
                   '${_getMonthName(_currentMonth)} ${_currentMonth.year}',
-                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTextStyles.title,
                 ),
                 Row(
                   children: [
@@ -81,7 +80,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       day,
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.textSecondary,
+                        color: AppColors.textSecondary,
                       ),
                     ),
                   ),
@@ -108,12 +107,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
               children: [
                 Text(
                   'Tarefas do Dia',
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppTextStyles.cardTitle,
                 ),
                 IconButton(
-                  icon: const Icon(Icons.add_circle_outline, color: AppTheme.primaryColor),
+                  icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
                   onPressed: () {
                     _showAddTaskDialog(context, _selectedDate);
                   },
@@ -167,7 +164,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           child: Container(
             margin: const EdgeInsets.all(2),
             decoration: BoxDecoration(
-              color: isSelected ? AppTheme.primaryColor : Colors.transparent,
+              color: isSelected ? AppColors.primary : Colors.transparent,
               shape: BoxShape.circle,
             ),
             child: Column(
@@ -176,7 +173,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 Text(
                   dayNumber.toString(),
                   style: TextStyle(
-                    color: isSelected ? Colors.white : AppTheme.textPrimary,
+                    color: isSelected ? Colors.white : AppColors.textPrimary,
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                     fontSize: 16,
                   ),
@@ -187,7 +184,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     width: 6,
                     height: 6,
                     decoration: const BoxDecoration(
-                      color: AppTheme.primaryColor,
+                      color: AppColors.primary,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -209,11 +206,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.check_circle_outline, size: 48, color: AppTheme.textSecondary),
+                const Icon(Icons.check_circle_outline, size: 48, color: AppColors.textSecondary),
                 const SizedBox(height: 8),
                 Text(
                   'Nenhuma tarefa para este dia',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: AppTextStyles.subtitle,
                 ),
                 const SizedBox(height: 8),
                 TextButton.icon(
@@ -254,12 +251,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
         },
         title: Text(
           task.title,
-          style: TextStyle(
+          style: AppTextStyles.cardTitle.copyWith(
             decoration: task.isCompleted ? TextDecoration.lineThrough : null,
-            fontWeight: FontWeight.w500,
+            fontSize: 16,
           ),
         ),
-        subtitle: Text(task.subject),
+        subtitle: Text(task.subject, style: AppTextStyles.progressLabel),
         secondary: IconButton(
           icon: const Icon(Icons.delete_outline, color: Colors.red),
           onPressed: () {

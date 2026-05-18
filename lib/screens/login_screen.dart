@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/theme.dart';
 import '../widgets/logo_widget.dart';
+import '../core/app_colors.dart';
+import '../core/app_text_styles.dart';
 import 'home_screen.dart';
 import 'register_screen.dart';
 
@@ -21,18 +23,21 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Preencha todos os campos!')),
+        const SnackBar(
+          content: Text('Preencha todos os campos!', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
 
     setState(() => _isLoading = true);
     await Future.delayed(const Duration(seconds: 1));
-    
+
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLoggedIn', true);
     await prefs.setString('userName', _emailController.text.split('@')[0]);
-    
+
     if (mounted) {
       Navigator.pushReplacement(
         context,
@@ -51,31 +56,27 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 60),
-              
+
               // Logo com imagem PNG
               const Center(
                 child: LogoWidget(size: 80, showText: true),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               Center(
                 child: Text(
                   'Faça login para continuar:',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: AppTextStyles.subtitle,
                 ),
               ),
-              
+
               const SizedBox(height: 48),
-              
+
               // Campo E-mail
               const Text(
                 'E-mail',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppTheme.textSecondary,
-                ),
+                style: AppTextStyles.progressLabel,
               ),
               const SizedBox(height: 8),
               TextField(
@@ -87,17 +88,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // Campo Senha
               const Text(
                 'Senha',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppTheme.textSecondary,
-                ),
+                style: AppTextStyles.progressLabel,
               ),
               const SizedBox(height: 8),
               TextField(
@@ -110,7 +107,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                     ),
                     onPressed: () {
                       setState(() => _obscurePassword = !_obscurePassword);
@@ -118,16 +117,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Botão Entrar
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _login,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryColor,
+                    backgroundColor: AppColors.primary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -151,42 +150,43 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               Center(
                 child: TextButton(
                   onPressed: () {},
                   child: const Text(
                     'Esqueceu a sua senha?',
                     style: TextStyle(
-                      color: AppTheme.textSecondary,
+                      color: AppColors.textSecondary,
                       fontSize: 14,
                     ),
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     'Não tem uma conta? ',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: AppTextStyles.progressLabel,
                   ),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                        MaterialPageRoute(
+                            builder: (_) => const RegisterScreen()),
                       );
                     },
                     child: const Text(
                       'Cadastre-se',
                       style: TextStyle(
-                        color: AppTheme.primaryColor,
+                        color: AppColors.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

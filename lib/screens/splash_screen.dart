@@ -1,7 +1,8 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/theme.dart';
 import '../widgets/logo_widget.dart';
+import '../core/app_colors.dart';
+import '../core/app_text_styles.dart';
 import 'login_screen.dart';
 import 'home_screen.dart';
 
@@ -44,8 +45,8 @@ class _SplashScreenState extends State<SplashScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppTheme.primaryColor,
-              AppTheme.secondaryColor,
+              AppColors.primary,
+              AppColors.accent,
             ],
           ),
         ),
@@ -69,17 +70,16 @@ class _SplashScreenState extends State<SplashScreen> {
                     child: const Icon(
                       Icons.school_rounded,
                       size: 50,
-                      color: AppTheme.primaryColor,
+                      color: AppColors.primary,
                     ),
                   );
                 },
               ),
               const SizedBox(height: 32),
-              const Text(
+              Text(
                 'EDUTRACK',
-                style: TextStyle(
+                style: AppTextStyles.heading.copyWith(
                   fontSize: 32,
-                  fontWeight: FontWeight.bold,
                   color: Colors.white,
                   letterSpacing: 3,
                 ),
@@ -94,10 +94,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
+              Text(
                 'Organize seus estudos',
-                style: TextStyle(
-                  fontSize: 16,
+                style: AppTextStyles.subtitle.copyWith(
                   color: Colors.white70,
                 ),
               ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/activity_provider.dart';
 import '../utils/theme.dart';
+import '../core/app_colors.dart';
+import '../core/app_text_styles.dart';
 
 class ActivitiesListScreen extends StatelessWidget {
   const ActivitiesListScreen({super.key});
@@ -21,7 +23,7 @@ class ActivitiesListScreen extends StatelessWidget {
           children: [
             Text(
               'Aqui estão todas as suas atividades:',
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: AppTextStyles.subtitle,
             ),
             const SizedBox(height: 16),
             Expanded(
@@ -34,11 +36,11 @@ class ActivitiesListScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.assignment_turned_in, size: 80, color: AppTheme.textSecondary),
+                          const Icon(Icons.assignment_turned_in, size: 80, color: AppColors.textSecondary),
                           const SizedBox(height: 16),
                           Text(
                             'Nenhuma atividade cadastrada',
-                            style: Theme.of(context).textTheme.bodyLarge,
+                            style: AppTextStyles.subtitle,
                           ),
                         ],
                       ),
@@ -53,21 +55,21 @@ class ActivitiesListScreen extends StatelessWidget {
                         margin: const EdgeInsets.only(bottom: 12),
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+                            backgroundColor: AppColors.primary.withOpacity(0.1),
                             child: const Icon(
                               Icons.assignment,
                               size: 20,
-                              color: AppTheme.primaryColor,
+                              color: AppColors.primary,
                             ),
                           ),
                           title: Text(
                             activity.subject,
-                            style: const TextStyle(fontWeight: FontWeight.w600),
+                            style: AppTextStyles.cardTitle,
                           ),
-                          subtitle: Text(activity.title),
+                          subtitle: Text(activity.title, style: AppTextStyles.progressLabel),
                           trailing: Text(
                             'Entrega até ${_formatDate(activity.dueDate)}',
-                            style: Theme.of(context).textTheme.labelSmall,
+                            style: AppTextStyles.progressLabel,
                           ),
                         ),
                       );
