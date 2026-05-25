@@ -3,8 +3,6 @@ import 'package:provider/provider.dart';
 import '../providers/subject_provider.dart';
 import '../models/subject_model.dart';
 import '../utils/theme.dart';
-import '../core/app_colors.dart';
-import '../core/app_text_styles.dart';
 
 class AddSubjectScreen extends StatefulWidget {
   const AddSubjectScreen({super.key});
@@ -15,22 +13,12 @@ class AddSubjectScreen extends StatefulWidget {
 
 class _AddSubjectScreenState extends State<AddSubjectScreen> {
   final _nameController = TextEditingController();
-  String _selectedColor = '#6366F1';
-  
-  final List<Map<String, dynamic>> _colors = [
-    {'name': 'Roxo', 'code': '#6366F1'},
-    {'name': 'Verde', 'code': '#10B981'},
-    {'name': 'Laranja', 'code': '#F59E0B'},
-    {'name': 'Vermelho', 'code': '#EF4444'},
-    {'name': 'Rosa', 'code': '#EC4899'},
-    {'name': 'Azul', 'code': '#3B82F6'},
-  ];
   
   void _saveSubject() {
     if (_nameController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Digite o nome da matéria!', style: TextStyle(color: Colors.white)),
+          content: Text('Digite o nome da matéria!'),
           backgroundColor: Colors.red,
         ),
       );
@@ -39,7 +27,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
     
     final subject = Subject(
       name: _nameController.text,
-      color: _selectedColor,
+      color: '#6366F1', // Cor padrão
     );
     
     Provider.of<SubjectProvider>(context, listen: false).addSubject(subject);
@@ -48,7 +36,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Matéria ${_nameController.text} adicionada!'),
-        backgroundColor: AppColors.accent,
+        backgroundColor: AppTheme.secondaryColor,
       ),
     );
   }
@@ -56,72 +44,82 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF3F3F3),
+      
       appBar: AppBar(
         title: const Text('Nova Matéria'),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
+      
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            // Título da Matéria
+            const Text(
               'Título da Matéria',
-              style: AppTextStyles.cardTitle,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textPrimary,
+              ),
             ),
             const SizedBox(height: 8),
+            
+            // Campo de texto
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Ex: Dispositivos Móveis',
+                hintStyle: const TextStyle(
+                  color: AppTheme.textSecondary,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: AppTheme.primaryColor, width: 2),
+                ),
+                filled: true,
+                fillColor: Colors.white,
               ),
               autofocus: true,
             ),
-            const SizedBox(height: 32),
-            Text(
-              'Cor da Matéria',
-              style: AppTextStyles.cardTitle,
-            ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 16,
-              children: _colors.map((color) {
-                final isSelected = _selectedColor == color['code'];
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedColor = color['code'];
-                    });
-                  },
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Color(int.parse(color['code'].replaceFirst('#', '0xFF'))),
-                          shape: BoxShape.circle,
-                          border: isSelected
-                              ? Border.all(color: AppColors.primary, width: 3)
-                              : null,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        color['name'],
-                        style: AppTextStyles.progressLabel,
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
+            
             const Spacer(),
-            ElevatedButton(
-              onPressed: _saveSubject,
-              child: const Text('SALVAR'),
+            
+            // Botão SALVAR
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _saveSubject,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primaryColor,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'SALVAR',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ),
+            
+            const SizedBox(height: 20),
           ],
         ),
       ),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/activity_provider.dart';
 import '../models/activity_model.dart';
@@ -19,142 +19,192 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF3F3F3),
+
       appBar: AppBar(
         title: const Text('Calendário'),
+        centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Column(
-        children: [
-          // Mês e Ano com navegação
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${_getMonthName(_currentMonth)} ${_currentMonth.year}',
-                  style: AppTextStyles.title,
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.chevron_left),
-                      onPressed: () {
-                        setState(() {
-                          _currentMonth = DateTime(
-                            _currentMonth.year,
-                            _currentMonth.month - 1,
-                            1,
-                          );
-                        });
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.chevron_right),
-                      onPressed: () {
-                        setState(() {
-                          _currentMonth = DateTime(
-                            _currentMonth.year,
-                            _currentMonth.month + 1,
-                            1,
-                          );
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          
-          // Dias da semana
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((day) {
-                return Expanded(
-                  child: Center(
-                    child: Text(
-                      day,
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textSecondary,
+
+      // BOTÃO FLUTUANTE
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.primary,
+        elevation: 6,
+        onPressed: () {
+          _showAddTaskDialog(context, _selectedDate);
+        },
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 8),
+
+            // CARD DO CALENDÁRIO
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Column(
+                children: [
+                  // MÊS E ANO
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.chevron_left),
+                        onPressed: () {
+                          setState(() {
+                            _currentMonth = DateTime(
+                              _currentMonth.year,
+                              _currentMonth.month - 1,
+                              1,
+                            );
+                          });
+                        },
                       ),
-                    ),
+
+                      Row(
+                        children: [
+                          Text(
+                            _getMonthName(_currentMonth),
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+
+                          const SizedBox(width: 8),
+
+                          Text(
+                            _currentMonth.year.toString(),
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      IconButton(
+                        icon: const Icon(Icons.chevron_right),
+                        onPressed: () {
+                          setState(() {
+                            _currentMonth = DateTime(
+                              _currentMonth.year,
+                              _currentMonth.month + 1,
+                              1,
+                            );
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                );
-              }).toList(),
+
+                  const SizedBox(height: 12),
+
+                  // DIAS DA SEMANA
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children:
+                        ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((day) {
+                      return Expanded(
+                        child: Center(
+                          child: Text(
+                            day,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // GRID DO CALENDÁRIO
+                  SizedBox(
+                    height: 260,
+                    child: _buildCalendarGrid(),
+                  ),
+                ],
+              ),
             ),
-          ),
-          
-          const SizedBox(height: 8),
-          
-          // Grid do calendário
-          Expanded(
-            flex: 3,
-            child: _buildCalendarGrid(),
-          ),
-          
-          const Divider(height: 1),
-          
-          // Título "Tarefas do Dia"
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
+
+            const SizedBox(height: 16),
+
+            // TÍTULO
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
                   'Tarefas do Dia',
-                  style: AppTextStyles.cardTitle,
+                  style: AppTextStyles.cardTitle.copyWith(
+                    fontSize: 18,
+                  ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
-                  onPressed: () {
-                    _showAddTaskDialog(context, _selectedDate);
-                  },
-                  tooltip: 'Adicionar tarefa para este dia',
-                ),
-              ],
+              ),
             ),
-          ),
-          
-          // Lista de tarefas do dia selecionado
-          Expanded(
-            flex: 2,
-            child: _buildTasksForDay(),
-          ),
-        ],
+
+            const SizedBox(height: 8),
+
+            // LISTA DE TAREFAS
+            Expanded(
+              child: _buildTasksForDay(),
+            ),
+
+            const SizedBox(height: 80),
+          ],
+        ),
       ),
     );
   }
-  
+
   Widget _buildCalendarGrid() {
-    final daysInMonth = DateTime(_currentMonth.year, _currentMonth.month + 1, 0).day;
-    final firstDayOfMonth = DateTime(_currentMonth.year, _currentMonth.month, 1);
+    final daysInMonth =
+        DateTime(_currentMonth.year, _currentMonth.month + 1, 0).day;
+
+    final firstDayOfMonth =
+        DateTime(_currentMonth.year, _currentMonth.month, 1);
+
     final startingWeekday = firstDayOfMonth.weekday % 7;
-    
+
     return GridView.builder(
-      padding: const EdgeInsets.all(8),
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: 42,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 7,
-        childAspectRatio: 1.2,
+        childAspectRatio: 1,
       ),
-      itemCount: 42,
       itemBuilder: (context, index) {
         final dayNumber = index - startingWeekday + 1;
-        
+
         if (dayNumber < 1 || dayNumber > daysInMonth) {
-          return Container();
+          return const SizedBox();
         }
-        
-        final date = DateTime(_currentMonth.year, _currentMonth.month, dayNumber);
+
+        final date = DateTime(
+          _currentMonth.year,
+          _currentMonth.month,
+          dayNumber,
+        );
+
         final isSelected = _selectedDate.year == date.year &&
-                           _selectedDate.month == date.month &&
-                           _selectedDate.day == date.day;
+            _selectedDate.month == date.month &&
+            _selectedDate.day == date.day;
+
         final hasTasks = _hasTasksOnDate(date);
-        
+
         return GestureDetector(
           onTap: () {
             setState(() {
@@ -162,10 +212,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
             });
           },
           child: Container(
-            margin: const EdgeInsets.all(2),
+            margin: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: isSelected ? AppColors.primary : Colors.transparent,
-              shape: BoxShape.circle,
+              color: isSelected
+                  ? AppColors.primary
+                  : Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -173,16 +225,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 Text(
                   dayNumber.toString(),
                   style: TextStyle(
-                    color: isSelected ? Colors.white : AppColors.textPrimary,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                    fontSize: 16,
+                    color:
+                        isSelected ? Colors.white : Colors.black87,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
+
                 if (hasTasks && !isSelected)
                   Container(
                     margin: const EdgeInsets.only(top: 4),
-                    width: 6,
-                    height: 6,
+                    width: 5,
+                    height: 5,
                     decoration: const BoxDecoration(
                       color: AppColors.primary,
                       shape: BoxShape.circle,
@@ -195,38 +248,31 @@ class _CalendarScreenState extends State<CalendarScreen> {
       },
     );
   }
-  
+
   Widget _buildTasksForDay() {
     return Consumer<ActivityProvider>(
       builder: (context, activityProvider, _) {
-        final tasks = activityProvider.getActivitiesByDate(_selectedDate);
-        
+        final tasks =
+            activityProvider.getActivitiesByDate(_selectedDate);
+
         if (tasks.isEmpty) {
           return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.check_circle_outline, size: 48, color: AppColors.textSecondary),
-                const SizedBox(height: 8),
-                Text(
-                  'Nenhuma tarefa para este dia',
-                  style: AppTextStyles.subtitle,
-                ),
-                const SizedBox(height: 8),
-                TextButton.icon(
-                  onPressed: () {
-                    _showAddTaskDialog(context, _selectedDate);
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text('Adicionar tarefa'),
-                ),
-              ],
+            child: Text(
+              'Nenhuma tarefa para este dia',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 16,
+              ),
             ),
           );
         }
-        
+
         return ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            bottom: 100,
+          ),
           itemCount: tasks.length,
           itemBuilder: (context, index) {
             final task = tasks[index];
@@ -236,49 +282,124 @@ class _CalendarScreenState extends State<CalendarScreen> {
       },
     );
   }
-  
+
   Widget _buildTaskItem(BuildContext context, Activity task) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: CheckboxListTile(
-        value: task.isCompleted,
-        onChanged: (bool? value) {
-          final provider = Provider.of<ActivityProvider>(context, listen: false);
-          task.isCompleted = value ?? false;
-          task.progress = task.isCompleted ? 100 : 0;
-          provider.updateActivity(task);
-          setState(() {});
-        },
-        title: Text(
-          task.title,
-          style: AppTextStyles.cardTitle.copyWith(
-            decoration: task.isCompleted ? TextDecoration.lineThrough : null,
-            fontSize: 16,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 10,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: Colors.grey.shade300,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
-        ),
-        subtitle: Text(task.subject, style: AppTextStyles.progressLabel),
-        secondary: IconButton(
-          icon: const Icon(Icons.delete_outline, color: Colors.red),
-          onPressed: () {
-            _showDeleteConfirmation(context, task);
-          },
-        ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Checkbox(
+            value: task.isCompleted,
+            activeColor: AppColors.primary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+            onChanged: (bool? value) {
+              final provider =
+                  Provider.of<ActivityProvider>(
+                context,
+                listen: false,
+              );
+
+              task.isCompleted = value ?? false;
+              task.progress =
+                  task.isCompleted ? 100 : 0;
+
+              provider.updateActivity(task);
+
+              setState(() {});
+            },
+          ),
+
+          const SizedBox(width: 8),
+
+          // TEXTO
+          Expanded(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+              children: [
+                Text(
+                  task.title,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    decoration: task.isCompleted
+                        ? TextDecoration.lineThrough
+                        : null,
+                  ),
+                ),
+
+                const SizedBox(height: 4),
+
+                Text(
+                  task.subject,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          IconButton(
+            icon: const Icon(
+              Icons.delete_outline,
+              color: Colors.red,
+            ),
+            onPressed: () {
+              _showDeleteConfirmation(context, task);
+            },
+          ),
+        ],
       ),
     );
   }
-  
-  void _showAddTaskDialog(BuildContext context, DateTime date) {
+
+  void _showAddTaskDialog(
+      BuildContext context,
+      DateTime date,
+      ) {
     final titleController = TextEditingController();
-    final subjectController = TextEditingController();
+
     String selectedSubject = 'Dispositivos Móveis';
-    
-    final subjects = ['Dispositivos Móveis', 'Back End', 'Front End', 'Banco de Dados', 'Empreendedorismo', 'Residência de Software'];
-    
+
+    final subjects = [
+      'Dispositivos Móveis',
+      'Back End',
+      'Front End',
+      'Banco de Dados',
+      'Empreendedorismo',
+      'Residência de Software'
+    ];
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Adicionar Tarefa - ${_formatDate(date)}'),
+          title: Text(
+            'Adicionar Tarefa - ${_formatDate(date)}',
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -289,7 +410,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   border: OutlineInputBorder(),
                 ),
               ),
+
               const SizedBox(height: 12),
+
               DropdownButtonFormField<String>(
                 initialValue: selectedSubject,
                 decoration: const InputDecoration(
@@ -313,11 +436,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
               onPressed: () => Navigator.pop(context),
               child: const Text('Cancelar'),
             ),
+
             ElevatedButton(
               onPressed: () {
                 if (titleController.text.isNotEmpty) {
                   final newTask = Activity(
-                    id: DateTime.now().millisecondsSinceEpoch,
+                    id: DateTime.now()
+                        .millisecondsSinceEpoch,
                     title: titleController.text,
                     subject: selectedSubject,
                     dueDate: date,
@@ -325,8 +450,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     isCompleted: false,
                     progress: 0,
                   );
-                  Provider.of<ActivityProvider>(context, listen: false).addActivity(newTask);
+
+                  Provider.of<ActivityProvider>(
+                    context,
+                    listen: false,
+                  ).addActivity(newTask);
+
                   Navigator.pop(context);
+
                   setState(() {});
                 }
               },
@@ -337,26 +468,39 @@ class _CalendarScreenState extends State<CalendarScreen> {
       },
     );
   }
-  
-  void _showDeleteConfirmation(BuildContext context, Activity task) {
+
+  void _showDeleteConfirmation(
+      BuildContext context,
+      Activity task,
+      ) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Remover tarefa'),
-          content: Text('Deseja remover "${task.title}"?'),
+          content: Text(
+            'Deseja remover "${task.title}"?',
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: const Text('Cancelar'),
             ),
+
             TextButton(
               onPressed: () {
-                Provider.of<ActivityProvider>(context, listen: false).deleteActivity(task.id!);
+                Provider.of<ActivityProvider>(
+                  context,
+                  listen: false,
+                ).deleteActivity(task.id!);
+
                 Navigator.pop(context);
+
                 setState(() {});
               },
-              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
               child: const Text('Remover'),
             ),
           ],
@@ -364,22 +508,42 @@ class _CalendarScreenState extends State<CalendarScreen> {
       },
     );
   }
-  
+
   bool _hasTasksOnDate(DateTime date) {
-    final provider = Provider.of<ActivityProvider>(context, listen: false);
-    final tasks = provider.getActivitiesByDate(date);
+    final provider =
+        Provider.of<ActivityProvider>(
+      context,
+      listen: false,
+    );
+
+    final tasks =
+        provider.getActivitiesByDate(date);
+
     return tasks.isNotEmpty;
   }
-  
+
   String _getMonthName(DateTime date) {
     const months = [
-      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro'
     ];
+
     return months[date.month - 1];
   }
-  
+
   String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+    return '${date.day.toString().padLeft(2, '0')}/'
+        '${date.month.toString().padLeft(2, '0')}/'
+        '${date.year}';
   }
 }
