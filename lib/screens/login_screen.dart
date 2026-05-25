@@ -24,7 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Preencha todos os campos!', style: TextStyle(color: Colors.white)),
+          content: Text('Preencha todos os campos!',
+              style: TextStyle(color: Colors.white)),
           backgroundColor: Colors.red,
         ),
       );
@@ -74,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 48),
 
               // Campo E-mail
-              const Text(
+              Text(
                 'E-mail',
                 style: AppTextStyles.progressLabel,
               ),
@@ -92,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 20),
 
               // Campo Senha
-              const Text(
+              Text(
                 'Senha',
                 style: AppTextStyles.progressLabel,
               ),

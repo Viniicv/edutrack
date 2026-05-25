@@ -31,6 +31,19 @@ class ActivityProvider extends ChangeNotifier {
       a.isUrgent && !a.isCompleted
     ).toList();
   }
+
+  List<Activity> getNextWeekActivities() {
+    final today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    final nextWeek = today.add(const Duration(days: 7));
+
+    return _activities.where((a) {
+      final dueDate = DateTime(a.dueDate.year, a.dueDate.month, a.dueDate.day);
+      return dueDate.isAfter(today) &&
+          !dueDate.isAfter(nextWeek) &&
+          !a.isCompleted;
+    }).toList()
+      ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
+  }
   
   List<Activity> getActivitiesByDate(DateTime date) {
     return _activities.where((a) => 

@@ -2,37 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/subject_provider.dart';
 import '../models/subject_model.dart';
-import '../utils/theme.dart';
 import '../core/app_colors.dart';
 import '../core/app_text_styles.dart';
 import 'add_subject_screen.dart';
 
 class SubjectsScreen extends StatelessWidget {
-  const SubjectsScreen({super.key});
+  final bool showBottomNavigation;
+
+  const SubjectsScreen({
+    super.key,
+    this.showBottomNavigation = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Matérias e Progressos'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add_circle_outline),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const AddSubjectScreen()),
-              );
-            },
-            tooltip: 'Nova Matéria',
-          ),
-        ],
-      ),
       body: Column(
         children: [
-          // Título "Nova Matéria"
           Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
@@ -47,26 +33,29 @@ class SubjectsScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const AddSubjectScreen()),
+                      MaterialPageRoute(
+                          builder: (_) => const AddSubjectScreen()),
                     );
                   },
                 ),
               ],
             ),
           ),
-          
-          // Lista de matérias
           Expanded(
             child: Consumer<SubjectProvider>(
               builder: (context, subjectProvider, _) {
                 final subjects = subjectProvider.subjects;
-                
+
                 if (subjects.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.book_outlined, size: 64, color: AppColors.textSecondary),
+                        const Icon(
+                          Icons.book_outlined,
+                          size: 64,
+                          color: AppColors.textSecondary,
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           'Nenhuma matéria cadastrada',
@@ -77,7 +66,9 @@ class SubjectsScreen extends StatelessWidget {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (_) => const AddSubjectScreen()),
+                              MaterialPageRoute(
+                                builder: (_) => const AddSubjectScreen(),
+                              ),
                             );
                           },
                           child: const Text('Adicionar Matéria'),
@@ -86,7 +77,7 @@ class SubjectsScreen extends StatelessWidget {
                     ),
                   );
                 }
-                
+
                 return ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   itemCount: subjects.length,
@@ -100,41 +91,45 @@ class SubjectsScreen extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.textSecondary,
-        currentIndex: 2, // Matérias é o índice 2
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacementNamed(context, '/home');
-          } else if (index == 1) {
-            Navigator.pushReplacementNamed(context, '/calendar');
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Início',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_outlined),
-            activeIcon: Icon(Icons.calendar_today),
-            label: 'Calendário',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book_outlined),
-            activeIcon: Icon(Icons.book),
-            label: 'Matérias',
-          ),
-        ],
-      ),
+      bottomNavigationBar: showBottomNavigation
+          ? BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.white,
+              selectedItemColor: AppColors.primary,
+              unselectedItemColor: AppColors.textSecondary,
+              currentIndex: 2,
+              onTap: (index) {
+                if (index == 0) {
+                  Navigator.pushReplacementNamed(context, '/home');
+                } else if (index == 1) {
+                  Navigator.pushReplacementNamed(context, '/calendar');
+                }
+              },
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home_outlined),
+                  activeIcon: Icon(Icons.home),
+                  label: 'Início',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.calendar_today_outlined),
+                  activeIcon: Icon(Icons.calendar_today),
+                  label: 'Calendário',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.book_outlined),
+                  activeIcon: Icon(Icons.book),
+                  label: 'Matérias',
+                ),
+              ],
+            )
+          : null,
     );
   }
-  
+
   Widget _buildSubjectCard(BuildContext context, Subject subject) {
+    final color = Color(int.parse(subject.color.replaceFirst('#', '0xFF')));
+
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       child: Column(
@@ -149,7 +144,7 @@ class SubjectsScreen extends StatelessWidget {
                     width: 12,
                     height: 12,
                     decoration: BoxDecoration(
-                      color: Color(int.parse(subject.color.replaceFirst('#', '0xFF'))),
+                      color: color,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -172,9 +167,7 @@ class SubjectsScreen extends StatelessWidget {
             child: LinearProgressIndicator(
               value: subject.progress / 100,
               backgroundColor: Colors.grey[200],
-              valueColor: AlwaysStoppedAnimation(
-                Color(int.parse(subject.color.replaceFirst('#', '0xFF'))),
-              ),
+              valueColor: AlwaysStoppedAnimation(color),
               minHeight: 10,
             ),
           ),

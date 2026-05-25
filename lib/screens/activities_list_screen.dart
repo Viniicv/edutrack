@@ -30,13 +30,14 @@ class ActivitiesListScreen extends StatelessWidget {
               child: Consumer<ActivityProvider>(
                 builder: (context, activityProvider, _) {
                   final activities = activityProvider.activities;
-                  
+
                   if (activities.isEmpty) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.assignment_turned_in, size: 80, color: AppColors.textSecondary),
+                          const Icon(Icons.assignment_turned_in,
+                              size: 80, color: AppColors.textSecondary),
                           const SizedBox(height: 16),
                           Text(
                             'Nenhuma atividade cadastrada',
@@ -46,7 +47,7 @@ class ActivitiesListScreen extends StatelessWidget {
                       ),
                     );
                   }
-                  
+
                   return ListView.builder(
                     itemCount: activities.length,
                     itemBuilder: (context, index) {
@@ -55,7 +56,8 @@ class ActivitiesListScreen extends StatelessWidget {
                         margin: const EdgeInsets.only(bottom: 12),
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: AppColors.primary.withOpacity(0.1),
+                            backgroundColor:
+                                AppColors.primary.withValues(alpha: 0.3),
                             child: const Icon(
                               Icons.assignment,
                               size: 20,
@@ -66,7 +68,8 @@ class ActivitiesListScreen extends StatelessWidget {
                             activity.subject,
                             style: AppTextStyles.cardTitle,
                           ),
-                          subtitle: Text(activity.title, style: AppTextStyles.progressLabel),
+                          subtitle: Text(activity.title,
+                              style: AppTextStyles.progressLabel),
                           trailing: Text(
                             'Entrega até ${_formatDate(activity.dueDate)}',
                             style: AppTextStyles.progressLabel,
@@ -83,7 +86,7 @@ class ActivitiesListScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   String _formatDate(DateTime date) {
     return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
   }

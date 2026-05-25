@@ -19,13 +19,14 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _checkLoginStatus();
   }
-  
+
   Future<void> _checkLoginStatus() async {
-    await Future.delayed(const Duration(seconds: 2));
-    
+    await Future.delayed(
+        const Duration(seconds: 3)); // Simula o tempo de carregamento do splash
+
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    
+
     if (mounted) {
       Navigator.pushReplacement(
         context,
@@ -35,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,10 +101,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   color: Colors.white70,
                 ),
               ),
-              const SizedBox(height: 48),
-              const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.white),
-              ),
+              const SizedBox(height: 48)
             ],
           ),
         ),

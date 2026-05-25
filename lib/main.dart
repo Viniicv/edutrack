@@ -6,9 +6,8 @@ import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
 import 'screens/home_screen.dart';
-import 'screens/calendar_screen.dart';
-import 'screens/subjects_screen.dart';
 import 'screens/add_subject_screen.dart';
+import 'screens/activities_list_screen.dart';
 import 'utils/theme.dart';
 
 void main() {
@@ -34,9 +33,10 @@ class MyApp extends StatelessWidget {
           '/login': (context) => const LoginScreen(),
           '/register': (context) => const RegisterScreen(),
           '/home': (context) => const HomeScreen(),
-          '/calendar': (context) => const CalendarScreen(),
-          '/subjects': (context) => const SubjectsScreen(),
+          '/calendar': (context) => const HomeScreen(initialIndex: 1),
+          '/subjects': (context) => const HomeScreen(initialIndex: 2),
           '/add_subject': (context) => const AddSubjectScreen(),
+          '/activities': (context) => const ActivitiesListScreen(),
         },
       ),
     );
